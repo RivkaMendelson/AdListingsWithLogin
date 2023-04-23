@@ -90,7 +90,7 @@ namespace AdWithLogin_data
         {
             using var connection = new SqlConnection(_connectionString);
             using var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM Ads a JOIN People p ON a.personId=p.Id";
+            cmd.CommandText = "SELECT a.*, p.Name, p.PhoneNumber FROM Ads a JOIN People p ON a.personId=p.Id";
             connection.Open();
             var reader = cmd.ExecuteReader();
             List<AdWithPersonInfo> ads = new List<AdWithPersonInfo>();
@@ -104,7 +104,8 @@ namespace AdWithLogin_data
                     Details = (string)reader["Details"],
                     DateCreated = (DateTime)reader["DateCreated"],
                     Name = (string)reader["Name"],
-                    PhoneNumber = (string)reader["PhoneNumber"]
+                    PhoneNumber = (string)reader["PhoneNumber"],
+                    PersonId = (int)reader["PersonId"]
 
                 });
 
@@ -126,8 +127,8 @@ namespace AdWithLogin_data
             while (reader.Read())
             {
                 ids.Add ((int)reader["PersonId"]);
-
             }
+
             return ids;
         }
         public void Delete(int id, int userId)
@@ -142,6 +143,32 @@ namespace AdWithLogin_data
 
             cmd.ExecuteNonQuery();
 
+        }
+
+        public List<Ad> GetUserAds(int PersonId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT * FROM Ads WHERE PersonId = @id";
+            cmd.Parameters.AddWithValue("@id", PersonId);
+            connection.Open();
+
+            List<Ad> ads = new List<Ad>();
+            var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ads.Add(new Ad
+                {
+                    Id = (int)reader["Id"],
+                    Title = (string)reader["title"],
+                    Details = (string)reader["details"],
+                    DateCreated = (DateTime)reader["dateCreated"]
+                });
+                
+            }
+
+            return ads;
         }
     }
 }

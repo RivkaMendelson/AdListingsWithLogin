@@ -1,0 +1,20 @@
+﻿@model List<AdWithLogin_data.Ad>;
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+
+        @foreach (AdWithLogin_data.Ad ad in Model)
+        {
+            <div class="bg-light p-4 rounded shadow mb-3">
+                <h2>@ad.Title</h2>
+                <h5>Listed on @ad.DateCreated</h5>
+                <h3>Details:</h3>
+                <p>@ad.Details</p>
+                <a href="/home/delete?id=@ad.Id" class="btn btn-danger">Delete</a>
+
+            </div>
+        }
+
+
+    </div>
+</div>

@@ -6,5 +6,6 @@ namespace Homework_Apr_19_Ads_with_Login.Models
     {
         public List<AdWithPersonInfo> ads;
         public List<int> UserAdIds;
+        public Person user;
     }
 }
