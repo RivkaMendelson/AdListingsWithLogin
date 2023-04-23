@@ -19,7 +19,7 @@ namespace Homework_Apr_19_Ads_with_Login.Controllers
 
             IndexPageViewModel vm = new()
             {
-                ads = db.GetAds()
+                ads = db.GetAds(),
             };
 
             if(User.Identity.IsAuthenticated)
@@ -27,8 +27,8 @@ namespace Homework_Apr_19_Ads_with_Login.Controllers
                 var currentUserEmail = User.Identity.Name;
                 var user = db.GetByEmail(currentUserEmail);
 
+                
                 vm.UserAdIds = db.GetUserIds(user.Id);
-                vm.user = user;
             }
 
             
@@ -40,11 +40,6 @@ namespace Homework_Apr_19_Ads_with_Login.Controllers
             {
                 vm.ads = new List<AdWithPersonInfo>();
             }
-            if(vm.user == null)
-            {
-                vm.user=new Person();
-            }
-            
 
             return View(vm);
         }
@@ -122,16 +117,7 @@ namespace Homework_Apr_19_Ads_with_Login.Controllers
             var user = db.GetByEmail(userEmail);
             db.Delete(id, user.Id);
             return Redirect("/home/index");
-        }
 
-        [Authorize]
-        public IActionResult MyAds()
-        {
-            Database db = new Database(_connectionString);
-            var userEmail = User.Identity.Name;
-            var user = db.GetByEmail(userEmail);
-            List<Ad> ads = db.GetUserAds(user.Id);
-            return View(ads);
         }
     }
 }
